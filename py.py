@@ -1,59 +1,48 @@
-#开始于2021/7/13 
-#第一天写了54行代码(包括注释)
 import socket
 import struct
 
-HOST='127.0.0.1'
-PORT=5678
+host="127.0.0.1"
+port=5678
 
 def close():
     conn.close()
-    s.close() 
+    s.close()
     return
 
-s= socket.socket(socket.AF_INET,socket.SOCK_STREAM)   #定义socket类型，网络通信协议为TCP
-s.bind((HOST,PORT))   #套接字绑定的IP与端口
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.bind((host,port))
 s.listen()
 conn,_=s.accept()
 
-#第一次确认
-VER=conn.recv(1)
-NMETHODS=conn.recv(1)
-METHODS=conn.recv(1)
-if VER!=b"\x05":
-    if NMETHODS!=b"\x01":
-        if METHODS!=b"\x00":
-            print("连接失败")
-            close()
+header=conn.recv(2)
+VER, NMETHODS = struct.unpack("!BB", header)
+METHODS=conn.recv(NMETHODS)
 
-#第二次确认
-conn.sendall(b"\x05")
-conn.sendall(b"\x00")
+conn.sendall(struct.pack("!BB",VER,0))
 
-#由于返回值为\x00,所以无需第三次验证
-#直接开始发送数据
-VER=conn.recv(1)
-CMD=conn.recv(1)
-RSV=conn.recv(1)
-ATYP=conn.recv(1)
-DST_ADDR=conn.recv(4)
-DST_PORT=conn.recv(2)
+conn.recv(3)
+address_type=conn.recv(1)
+if address_type==b"\x01":
+    to_address=socket.inet_ntoa(conn.recv(4))
+elif address_type==b"\x03":
+    domain_length = conn.recv(1)[0]   #!!!!!!!!
+    to_address=socket.gethostbyname(conn.recv(domain_length))
+else:
+    close()
+to_port=struct.unpack("!H",conn.recv(2))[0]
 
-DST_ADDR=socket.inet_ntop(socket.AF_INET,DST_ADDR)
-DST_PORT=struct.unpack(">H",DST_PORT)[0]#如果不加[0]的话返回值是tuple,加了之后该元组的[0]为端口,是一个int
-
-conn.sendall(VER)
-conn.sendall(b"\x00")
-conn.sendall(RSV)
-conn.sendall(b"\x01")
-conn.sendall(socket.inet_pton(socket.AF_INET,HOST))
-conn.sendall(struct.pack(">H",PORT))
+conn.sendall(b"\x05\x00\x00\x01")
+conn.sendall(socket.inet_aton(host))
+conn.sendall(struct.pack("!H",port))
 
 data=conn.recv(4096)
+to=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+to.connect((to_address,to_port))
+to.sendall(data)
+data=to.recv(4096)
+conn.sendall(data)
 
-close()
-
-
+    
 
 
 

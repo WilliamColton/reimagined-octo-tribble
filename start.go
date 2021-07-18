@@ -37,7 +37,7 @@ void HKRunator(char *programName)   //程序名称（**全路径**）
 import "C"
 import "unsafe"
 
-func start(addr string) (a bool) {
+func Start(addr string) (a bool) {
 	programName := C.CString(addr)
 	defer C.free(unsafe.Pointer(programName))
 	C.HKRunator(programName)

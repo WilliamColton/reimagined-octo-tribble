@@ -9,4 +9,4 @@
 # https://gist.github.com/felix021/7f9d05fa1fd9f8f62cbce9edbdb19253和https://github.com/WilliamColton/reimagined-octo-tribble/blob/main/successful.go可以用来参考。
 # 时隔数年，再度更新（2024 2/20 早2：42（没错是凌晨） 在昨日发现一个很好用的框架Goframe后，彻夜研究，终于实现了第一个带加解密的半成功品，实属不易，接下来不会在此更新了，而是在第一个成功品出来之后重新开一个仓库正式更新） ProxyServer和ProxyLocal文件夹下面的就是我的半成功品，chatgpt4.0在过程中出了很大的力，从中受益颇多，当然也和我这些年的进步密不可分
 
-#最终，2024年2月19日，第一个可以在本机运行的版本出来了，就放在src目录下
+# 最终，2024年2月19日，第一个可以在本机运行的版本出来了，就放在src目录下

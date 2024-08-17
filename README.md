@@ -48,3 +48,4 @@ func handleSocks5Handshake(conn net.Conn) string {
 ```
 # 2024 8/17 20：28：08秒记：成功进行socks5握手！！！
 # 伟大的进步哈哈哈哈！！！
+kitw.zip即现在的代码，运行起来特别卡，但是我已经有了优化的想法，开干！！！同日20：44：50留
